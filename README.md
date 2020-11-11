@@ -24,3 +24,21 @@ https://www.kaggle.com/paultimothymooney/phd-stipends/data#
 
 ## Challenge 2
 ...
+
+##### DSS Brainpost Web Analytics Challenge
+
+Date Nov 10, 2020
+
+##### Description
+- The page view data is from http://BrainPost.co
+- data includes page view information for weekly published pages.
+
+
+##### Questions
+- What content (or types of content) is most popular (what are patterns we see in popular content) and is different content popular amongst different subgroups (e.g. by source/medium)?
+
+- Any question that will help us to take action to better tailor our content to our audience(s) or understand how traffic comes to the site.
+
+- Where are people visiting from (source-wise)?
+
+

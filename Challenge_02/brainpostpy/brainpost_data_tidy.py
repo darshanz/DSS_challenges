@@ -34,14 +34,6 @@ def time_hhmmss_to_sec(hhmmss):
 
 
 def extend_data_with_info_from_page(content_data_df):
-    none_list = [None for height in range(content_data_df.shape[0])]
-    content_data_df['paths'] = none_list
-    content_data_df['from_google'] = none_list
-    content_data_df['from_facebook'] = none_list
-    content_data_df['platform'] = none_list
-    content_data_df['google_keyword'] = none_list
-    content_data_df['search_keyword'] = none_list
-    content_data_df['sqsscreenshot'] = none_list
     for index, row in content_data_df.iterrows():
         parsed_page = urlparse(row["page"])
         content_data_df.loc[index, 'path'] = parsed_page.path

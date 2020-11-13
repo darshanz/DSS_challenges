@@ -1,6 +1,15 @@
 from urllib.parse import urlparse, parse_qs
+import pandas as pd
 
+'''
+The functions defined in the file are specifically written to work with brainpost dataset for Data Science Syndicate Challenge-2 Dataset.
+Not all functions are generalized enough to work in every situation.
 
+In other contexts, the functions defined here may behave differently and give differet results.
+
+Proper procedure in acompannying jupyter notebooks is strictly required to be followed. 
+
+'''
 def tidy_column_names(content_data_df):
     '''
     Rename the columns
@@ -83,4 +92,76 @@ def extend_data_with_info_from_page(content_data_df):
                 # not sure what to do with this info, Let's skip it for now
                 pass
 
+    return content_data_df
+
+#Tidy weekly_brainpost
+def tidy_weekly_brainpost(content_data_df):
+    #create weekly_brainpost_df
+    for index, row in content_data_df.iterrows():
+        if '/weekly-brainpost' in row['path']:
+            content_data_df.loc[index, 'section'] = "weekly-brainpost"
+            path_val = row['path']
+            pub_date = None
+            page_title = None
+            tag = None
+            path_val = path_val.replace('/weekly-brainpost','')
+            if len(path_val) == 0 or path_val in ['/', '/)']:
+                content_data_df.loc[index, 'page_title'] = "WEEKLY_BRAINPOST_HOME"
+            else:
+                path_val = path_val[1:] if path_val[0] == '/' else path_val
+                if path_val.startswith('tag/'): 
+                    content_data_df.loc[index, 'tag'] = path_val.replace('tag/','').replace('+',' ')
+                else :
+                    #this is page with date
+                    content_data_df.loc[index, 'pub_date'] = path_val[:path_val.rfind('/')]
+                    content_data_df.loc[index, 'page_title'] = path_val[path_val.rfind('/')+1:].replace('-',' ').replace('+',' ')
+    return content_data_df
+
+#tidy_brainpost_life_hacks
+def tidy_brainpost_life_hacks(content_data_df):
+    for index, row in content_data_df.iterrows():
+        if '/brainpost-life-hacks' in row['path']:
+            content_data_df.loc[index, 'section'] = "brainpost-life-hacks"
+            path_val = row['path']
+            pub_date = None
+            page_title = None
+            tag = None
+            path_val = path_val.replace('/brainpost-life-hacks','')
+            if len(path_val) == 0 or path_val in ['/', '/)']:
+                content_data_df.loc[index, 'page_title'] = "BRAINPOST_LIFE_HACK_HOME"
+            else:
+                path_val = path_val[1:] if path_val[0] == '/' else path_val
+                #this is page with date
+                content_data_df.loc[index, 'pub_date'] = path_val[:path_val.rfind('/')]
+                content_data_df.loc[index, 'page_title'] = path_val[path_val.rfind('/')+1:].replace('-',' ').replace('+',' ')
+    return content_data_df
+
+
+#tidy_brainpost_life_hacks
+def tidy_blog(content_data_df):
+    for index, row in content_data_df.iterrows():
+        if '/blog' in row['path']:
+            content_data_df.loc[index, 'section'] = "blog"
+            path_val = row['path']
+            pub_date = None
+            page_title = None
+            tag = None
+            path_val = path_val.replace('/blog','')
+            if len(path_val) == 0 or path_val in ['/', '/)']:
+                content_data_df.loc[index, 'page_title'] = "BLOG_HOME"
+            else:
+                path_val = path_val[1:] if path_val[0] == '/' else path_val
+                #this is page with date
+                content_data_df.loc[index, 'pub_date'] = path_val[:path_val.rfind('/')]
+                content_data_df.loc[index, 'page_title'] = path_val[path_val.rfind('/')+1:].replace('-',' ').replace('+',' ')
+    return content_data_df
+
+
+# set section names
+def set_section_names(content_data_df, remaining_section_names):
+    for index, row in content_data_df.iterrows():
+        for section_name in remaining_section_names:
+            path_val = row['path']
+            if path_val.startswith(f'/{section_name}'):
+                content_data_df.loc[index, 'section'] = section_name
     return content_data_df

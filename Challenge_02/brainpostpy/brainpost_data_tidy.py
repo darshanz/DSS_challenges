@@ -25,7 +25,15 @@ def check_query_keys(page_vals):
     query_keys = set()
     for page_val in page_vals:
         query_keys, _ = get_query_key_val(page_val)
-    print(query_keys)
+        print(query_keys)
+
+def get_page_if_translated(page):
+    parsed_page = urlparse(page)
+    ppq = parsed_page.query
+    split_query = ppq.split('&')
+    for split_pair in split_query:
+        if split_pair.startswith('u='):
+            return split_pair[2:].replace('https://www.brainpost.co/','/')
 
 
 def get_query_key_val(q):
@@ -44,8 +52,14 @@ def time_hhmmss_to_sec(hhmmss):
 
 def extend_data_with_info_from_page(content_data_df):
     for index, row in content_data_df.iterrows():
-        parsed_page = urlparse(row["page"])
-        content_data_df.loc[index, 'path'] = parsed_page.path
+        #before proceeding let's convert the translate url to brainpost url
+        page_new = row["page"]
+        if 'translate_c' in row['page']:
+            content_data_df.loc[index, 'page'] = get_page_if_translated(row["page"])
+            page_new = get_page_if_translated(row["page"])
+        parsed_page = urlparse(page_new)
+        path = '/home' if parsed_page.path in ['/'] else parsed_page.path
+        content_data_df.loc[index, 'path'] = path
         if len(parsed_page.query) > 0:
             k, v = get_query_key_val(parsed_page.query)
             if k in ['back']:
